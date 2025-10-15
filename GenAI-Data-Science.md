@@ -30,6 +30,11 @@ Derrière leur efficacité et leur apparente facilité d’utilisation, les outi
 4. **Individuel** :
    - Quel impact sur ma pratique ? Provoque-t-il une « fainéantise cognitive » ? Est-ce que je conserve mon esprit critique ?
 
+Par exemple réfléchir sur :
+
+- créer un agent conversationnel (chatbot)  ? 
+- utiliser l’IA pour générer des images ?
+
 ### Panorama : quand utiliser l’IA en data science?
 
 Hors code, l’IA est pratique pour :
@@ -41,6 +46,7 @@ Hors code, l’IA est pratique pour :
 * Éclairer des points de la connaissance métier
   + P.ex. « Comment ces molécules impactent-elle le goût du vin ? »
   + **Attention aux hallucinations** : l’IA sert à *défricher*, toujours recouper avec des recherches sur d’autres sources que l’IA (articles, ouvrages…)
+* Plus largement : très bien pour tout ce qui est manipulation de texte : résumer, reformuler, réagencer… mettre à profit ces capacités pour la doc, compte rendu de réunion, etc. *avec parcimonie* eu égard aux considérations éthiques précédentes.
 
 Plus particulièrement concernant le code :
 
@@ -322,6 +328,10 @@ Vous pouvez vous créer des templates de prompts bien structurés. Perdez l’ha
 
 Bien sûr vous devez adapter cette présentation au type de problème que vous rencontrez : pour les debugs par exemple, intégrez une section [CODE QUI POSE PROBLÈME] et une section [BUG] (avec une description du problème, le traceback, etc.) et [DÉJÀ ESSAYÉ], etc.
 
+C’est une excellente pratique qui vous aide vous aussi à bien penser et clarifier votre démarche, un peu comme certains développeurs (dont votre serviteur) préparent l’écriture de leur code en écrivant les commentaires ou les fichiers readme en amont.
+
+Note : évitez le « surformatage » : inutile de se perdre dans des détails de mise en forme / mise en page, le formatage sert seulement à découper votre texte de manière logique, afin de faciliter le traitement par l’IA
+
 #### Créer une « context presentation/doc »
 
 Comme dit précédemment, une fois que vous avez un contexte parfaitement adapté à votre projet créer un document que vous pourrez copier/coller au début de toute nouvelle conversation liée au projet. C’est particulièrement utile pour des projets longs.
@@ -356,7 +366,101 @@ Comme dit précédemment, une fois que vous avez un contexte parfaitement adapt�
 
 Créez-vous également une cheatsheet de templates liés à différents problème : un template pour le debugging, un template pour gérer du boilerplate (exploration données, etc.)
 
-### Structurer le prompt (2)
+#### IA et IDE
+
+Pour des projets, on évite d’utiliser des Chatbot. Il y a différentes solutions IA : Copilot, Claude Code, Windsurf, Cursor, Zed… (de nouvelles tous les jours)
+
+L’immense avantage et que ces IA disposent directement du contexte du projet.
+
+De plus cela vous offre des options de formatage supplémentaires : vous pouvez utiliser les commentaires et docstrings pour guider l’IA :
+
+```
+# CONTEXTE: Dataset de 100k lignes, feature engineering
+# OBJECTIF: Créer une feature "days_since_last_purchase"
+# DONNÉES: df avec colonnes 'customer_id', 'purchase_date'
+
+def create_recency_feature(df):
+    """
+    Calcule le nombre de jours depuis le dernier achat pour chaque client.
+    
+    Args:
+        df: DataFrame avec 'customer_id' et 'purchase_date'
+    
+    Returns:
+        DataFrame avec nouvelle colonne 'days_since_last_purchase'
+    """
+    # compléter ici
+```
+
+Dans ce cas une bonne pratique qui aide beaucoup l’IA est de donner des noms très explicites aux fonctions et aux variables.
+
+On commence à s’éloigner du scope de cette présentation qui consiste à donner les bonnes pratiques de base dans l’usage de l’IA.
+
+#### Pratiques non-recommandées
+
+##### Donner (trop) de contexte non pertinent
+
+```
+Je travaille pour une entreprise de 500 personnes créée en 1995, nous avons 3 bureaux en France, mon manager s'appelle Trucmuche... [300 mots de contexte business] ...comment charger un CSV avec pandas ?
+```
+
+##### Référer à du contexte implicite
+
+```
+Je travaille sur un data set de 500k lignes et 25 colonnes dont une colonne date, mais l’extraction ne donne pas le format attendu
+```
+
+Vous n’indiquez pas :
+
+* le format de date (originel / attendu)
+* quelle est l’erreur (l’écart entre ce que vous obtenez et ce que vous souhaitez obtenir)
+* comment vous réalisez l’extraction, et quel est le problème posé
+
+##### Contexte « dispersé »
+
+```
+Message 1 : comment extraire des données de ces fichiers… 
+[…]
+Message 4 : je dois faire une régression logistique…
+[…]
+Message 7 :je travaille avec R et pas avec Python…
+[…]
+Message 12 : les colonnes 5 à 12 ne sont pas nettoyées…
+```
+
+Vous indiquez le contexte, mais dans plusieurs messages séparés, et sans logique (sans aller du général au particulier par exemple)
+
+##### Contexte « évolutif »
+
+```
+Message 1 : Convertir les dates d’un dataframe de 1000 lignes…
+[…]
+Message 10 : Peux-tu optimiser le code qui est soudainement devenu lent ?
+```
+
+Mais en fait entre le message 1 et le message 10 vous avez changé de dataset (1000 lignes -> 100k lignes) sans en informer votre agent.
+
+#### À retenir :
+
+* Au minimum (pour des questions génériques, rapides < 50 mots ) indiquer :
+  * le langage, les librairies et les versions utilisées
+  * un objectif général / problème
+  * demander un code / analyser une erreur… etc. 
+* Si on est sérieux, pour un problème plus précis (questions entre 50 et 200 mots), on structure le contexte :
+  * on liste l’environnement technique complet (stack)
+  * on caractérise les données (structure, format, taille…)
+  * on indique des contraintes (des choses à faire / à ne pas faire)
+  * on décrit un objectif / problème précis à atteindre / résoudre
+* Si on veut optimiser l’assistance sur un projet complet (on ne parle plus de question ici), en plus du contexte structuré, on rajoute :
+  * des exemples concrets de données
+  * les contraintes métiers, le détail des techniques que l’on veut utiliser
+  * ce qu’on a déjà essayé et le résultat obtenu (et en quoi il convient / il doit être amélioré)
+* Si on utilise l’IA dans un IDE : 
+  * mettre le maximum de contexte dans le projet (readme, etc.)
+  * donner des noms de fonctions, variables, très explicite
+  * utiliser les commentaires et les docstrings détaillées pour guider l’IA 
+
+### Structurer le prompt (2): formatage
 
 Nous venons de voir que nous pouvons structurer nos prompt, y compris en utilisant des techniques de formatages telles que le Markdown, et pourquoi pas du JSON, etc. ?
 
@@ -425,10 +529,19 @@ En particulier vous pouvez utiliser :
 #### Pratiques non-recommandées :
 
 * **JSON** 
-  On peut très bien rédiger des requêtes en JSON, mais c’est une purge pour un utilisateur humain. C’est un format qui sera plutôt utilisé lorsque l’on génère des prompts automatiquement pour des API qui utilisent ce format (lorsqu’on utilise des LLMs comme modèle de nos projets data par exemple). C’est un cas d’usage qui ne nous concerne donc pas ici.	
+  On peut très bien rédiger des requêtes en JSON, qui, bien qu’il soit fortement structuré, est peu lisible pour un utilisateur humain. C’est un format qui sera plutôt utilisé lorsque l’on génère des prompts automatiquement pour des API qui utilisent ce format. C’est un cas d’usage qui ne nous concerne donc pas ici.	
+* **Une suite de mots clefs**
+  Oui, j’ai vu des gens faire ça. C’est à l’encontre de toutes les pratiques que nous vous avons vu précédemment : difficulté à saisir le contexte, manque de précision dans les demandes/objectifs, etc.
 
-#### Des mots clefs (surtout pas recommandé )
+#### Checklist : "Mon prompt est-il bien formaté ?"
 
-J’ai vu des gens faire ça.
-
-C’est à l’encontre de toutes les pratiques que nous vous avons vu précédemment : difficulté à saisir le contexte, manque de précision dans les demandes/objectifs, etc.
+```markdown
+☐ Le contexte est séparé visuellement de la question
+☐ Les sections sont identifiables (headers ou labels)
+☐ Le code est dans des blocs délimités avec ```
+☐ Les listes sont utilisées pour énumérer (pas de pavés)
+☐ La hiérarchie de l'information est claire
+☐ Je n'ai pas sur-formaté (pas de tableaux ASCII, etc.)
+☐ Le prompt est scannable en 5 secondes
+☐ Quelqu'un d'autre pourrait comprendre en lisant rapidement
+```
