@@ -30,7 +30,7 @@ Derrière leur efficacité et leur apparente facilité d’utilisation, les outi
 4. **Individuel** :
    - Quel impact sur ma pratique ? Provoque-t-il une « fainéantise cognitive » ? Est-ce que je conserve mon esprit critique ?
 
-Par exemple réfléchir sur :
+Par exemple réfléchir sur	 :
 
 - créer un agent conversationnel (chatbot)  ? 
 - utiliser l’IA pour générer des images ?
@@ -443,22 +443,63 @@ Mais en fait entre le message 1 et le message 10 vous avez changé de dataset (1
 #### À retenir :
 
 * Au minimum (pour des questions génériques, rapides < 50 mots ) indiquer :
+
   * le langage, les librairies et les versions utilisées
   * un objectif général / problème
   * demander un code / analyser une erreur… etc. 
+
 * Si on est sérieux, pour un problème plus précis (questions entre 50 et 200 mots), on structure le contexte :
+
   * on liste l’environnement technique complet (stack)
   * on caractérise les données (structure, format, taille…)
   * on indique des contraintes (des choses à faire / à ne pas faire)
   * on décrit un objectif / problème précis à atteindre / résoudre
+
 * Si on veut optimiser l’assistance sur un projet complet (on ne parle plus de question ici), en plus du contexte structuré, on rajoute :
+
   * des exemples concrets de données
   * les contraintes métiers, le détail des techniques que l’on veut utiliser
   * ce qu’on a déjà essayé et le résultat obtenu (et en quoi il convient / il doit être amélioré)
+
 * Si on utilise l’IA dans un IDE : 
+
   * mettre le maximum de contexte dans le projet (readme, etc.)
   * donner des noms de fonctions, variables, très explicite
   * utiliser les commentaires et les docstrings détaillées pour guider l’IA 
+
+* Principe fondamental
+
+  > **"Si un collègue humain aurait besoin de ces infos pour vous aider, l'IA en a besoin aussi."**
+
+  Avant d'envoyer un prompt, demandez-vous :
+
+  - Est-ce que quelqu'un qui ne connaît pas mon projet pourrait comprendre ?
+  - Ai-je donné assez d'infos pour qu'on puisse réellement m'aider ?
+  - Est-ce que je demanderais ça à un collègue de cette manière ?
+
+  Si la réponse est "non" à l'une de ces questions, améliorez votre prompt !
+
+* Morale finale :
+  Pour rédiger un prompt précis, bien contextualisé, avec des questions pertinentes, vous devez maîtriser la théorie et les principes de la data science. Sinon vous ne saurez pas quelles questions poser, ou quelles sont vos options. Vous mettez l’IA au service de votre expertise, si vous n’avez pas cette expertise, l’IA ne pourra vous fournir que des idées vagues et générales.
+
+#### Checklist : Mon prompt est-il optimisé ?
+
+Avant d'envoyer votre prompt, vérifiez :
+
+```markdown
+☐ Contexte technique complet (versions, environnement)
+☐ Données décrites (taille, types, exemples)
+☐ Objectif clair et mesurable
+☐ Contraintes quantifiées
+☐ Exemples concrets fournis si pertinent
+☐ Code/erreur complet si applicable
+☐ Structure markdown lisible
+☐ Questions précises, pas vagues
+☐ Format de réponse attendu spécifié
+☐ Niveau d'expertise indiqué si pertinent
+```
+
+Un prompt correct doit cocher au minimum 7 items
 
 ### Structurer le prompt (2): formatage
 
@@ -545,3 +586,8 @@ En particulier vous pouvez utiliser :
 ☐ Le prompt est scannable en 5 secondes
 ☐ Quelqu'un d'autre pourrait comprendre en lisant rapidement
 ```
+
+## Ressources additionnelles
+
+* [Une série d’exemples d’amélioration de prompts](./prompt_before_after.md) (vous pouvez vous en servir comme base de cheatsheet)
+* [Un quiz (simple) pour réfléchir un peu sur les concepts exposés ici](./ai_prompt_quiz.md)
